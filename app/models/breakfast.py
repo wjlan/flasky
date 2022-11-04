@@ -14,3 +14,15 @@ class Breakfast(db.Model):
             "rating": self.rating,
             "prep_time": self.prep_time
         }
+    # Construct a class method: take breakfast_dict and create a Breakfast instance
+    @classmethod  # also remember the class decorator
+    def from_dict(cls, breakfast_dict):
+        return cls(
+            name=breakfast_dict["name"],
+            rating=breakfast_dict["rating"],
+            prep_time=breakfast_dict["prep_time"]
+        )
+
+    # return cls or Breakfast here both works, the only difference is cls is more flexible, 
+    # it also apply when there is another child class of Breakfast, cls could populate to the 
+    # exact class we are using.

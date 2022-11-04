@@ -5,7 +5,7 @@ def test_get_all_breakfasts_with_empty_db_return_empty_list(client):
     assert response_body == []
     assert response.status_code == 200
 
-def test_get_one_bike_with_empty_db_returns_404(client):
+def test_get_one_breakfast_with_empty_db_returns_404(client):
     response = client.get("/breakfast/1") # http method .get
     response_body = response.get_json()
 
@@ -25,7 +25,7 @@ def test_get_one_breakfast_with_populated_db_returns_breakfast_json(client, two_
         "rating": 3.0
     }
 
-def test_post_one_bike_creates_bike_in_db(client, two_breakfasts):
+def test_post_one_breakfast_creates_bike_in_db(client, two_breakfasts):
     response = client.post("/breakfast", json={
         "name": "coffee",
         "prep_time": 10,
