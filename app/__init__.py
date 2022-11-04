@@ -24,7 +24,7 @@ def create_app(testing=None):
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('TEST_SQLALCHEMY_DATABASE_URI')
 
-    # connecting our db to app and migrate we created in line 6-7
+    # connecting our db to app and migrate 
     db.init_app(app)
     migrate.init_app(app, db)
 
