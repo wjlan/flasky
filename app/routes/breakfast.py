@@ -44,7 +44,7 @@ def create_one_breakfast():
     return jsonify({'msg': f"Successfully created Breakfast with id ={new_breakfast.id}"}), 201
 
 
-@breakfast_bp.route('<breakfast_id>', methods=['PUT'])
+@breakfast_bp.route('/<breakfast_id>', methods=['PUT'])
 def update_one_breakfast(breakfast_id):
     update_breakfast = get_breakfast_from_id(Breakfast, breakfast_id)
 
