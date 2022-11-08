@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, abort, make_response
 # request can get the body of the requset
 from app import db
 from app.models.breakfast import Breakfast
+from app.models.menu import Menu
 # Now the database is connected and can be interacted
 
 
@@ -25,11 +26,13 @@ def get_all_breakfasts():
 
     return jsonify(result),200
 
+
 @breakfast_bp.route('/<breakfast_id>', methods=['GET'])
 def get_one_breakfast(breakfast_id):
-    chosen_breakfast = get_breakfast_from_id(Breakfast, breakfast_id)
+    chosen_breakfast = get_model_from_id(Breakfast, breakfast_id)
     
     return jsonify(chosen_breakfast.to_dict()), 200
+
 
 @breakfast_bp.route('', methods=['POST'])
 def create_one_breakfast():
@@ -46,7 +49,7 @@ def create_one_breakfast():
 
 @breakfast_bp.route('/<breakfast_id>', methods=['PUT'])
 def update_one_breakfast(breakfast_id):
-    update_breakfast = get_breakfast_from_id(Breakfast, breakfast_id)
+    update_breakfast = get_model_from_id(Breakfast, breakfast_id)
 
     request_body = request.get_json()
 
@@ -64,7 +67,7 @@ def update_one_breakfast(breakfast_id):
 
 @breakfast_bp.route('/<breakfast_id>', methods=['DELETE'])
 def delete_one_breakfast(breakfast_id):
-    breakfast_to_delete = get_breakfast_from_id(Breakfast, breakfast_id)
+    breakfast_to_delete = get_model_from_id(Breakfast, breakfast_id)
 
     db.session.delete(breakfast_to_delete)
     db.session.commit()
@@ -72,9 +75,26 @@ def delete_one_breakfast(breakfast_id):
     return jsonify({"msg": f"Successfully deleted breakfast with id {breakfast_to_delete.id}"}), 200
 
 
+@breakfast_bp.route('/<breakfast_id>/', methods=['PATCH'])
+def add_menu_to_breakfast(breakfast_id):
+    breakfast = get_model_from_id(Breakfast, breakfast_id)
+
+    request_body = request.get_json()
+
+    try:
+        menu_id = request_body['menu_id']
+    except KeyError:
+        return jsonify({"msg": "Missing menu id"}), 400
+
+    menu = get_model_from_id(Menu, menu_id)
+    
+    breakfast.menu = menu
+    
+    db.session.commit()
+    return jsonify({"msg": f"Added {breakfast.name} to {menu_id}"})
 
 
-def get_breakfast_from_id(cls, model_id):
+def get_model_from_id(cls, model_id):
     try:
         model_id = int(model_id)
     except ValueError:

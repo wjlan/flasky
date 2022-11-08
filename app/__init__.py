@@ -30,9 +30,14 @@ def create_app(testing=None):
 
     # import model Breakfast
     from app.models.breakfast import Breakfast
+    from app.models.menu import Menu
+
 
     # register blueprint
     from .routes.breakfast import breakfast_bp
     app.register_blueprint(breakfast_bp)
+
+    from.routes.menu import menu_bp
+    app.register_blueprint(menu_bp)
 
     return app
